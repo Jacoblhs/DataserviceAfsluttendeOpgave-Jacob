@@ -1,0 +1,54 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksempel 1 - XHR</title>
+
+    <script>
+        window.onload = () => {
+
+            const xhr = new XMLHttpRequest();
+
+            xhr.open( 'GET', 'https://jsonplaceholder.typicode.com/posts' );
+            xhr.onreadystatechange = function () {
+                const postsDiv = document.querySelector( "#posts" );
+                try {
+                    if ( xhr.readyState === 4 ) {
+                        if ( xhr.status === 200 ) {
+                            const data = JSON.parse( xhr.responseText );
+
+                            data.forEach( post => {
+                                const h2 = document.createElement( 'h2' );
+                                h2.textContent = post.title;
+                                postsDiv.appendChild( h2 );
+
+                                const p = document.createElement( 'p' );
+                                p.textContent = post.body;
+                                postsDiv.appendChild( p );
+                            } );
+                        } else {
+                            postsDiv.innerHTML = "Noget gik galt: " + xhr.status;
+                            throw new Error( 'Request failed with status ' + xhr.status );
+                        }
+                    }
+                } catch ( error ) {
+                    postsDiv.innerHTML = "Noget gik galt: " + error.message;
+                    console.error( 'An error occurred:', error );
+                }
+            }
+            xhr.send(); // Start request
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <h1>Kald til api med brug af XMLHttpRequest</h1>
+    <div id="posts">Her skal posts indlæses ....</div>
+
+</body>
+
+</html>
